@@ -1,0 +1,83 @@
+<mvc:View
+    controllerName="products.controller.Cart"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+    <Page 
+        title="Cart" 
+        showNavButton="true" 
+        navButtonPress=".onNavBack"
+        backgroundDesign="Solid">
+        <content>
+            <MessagePage
+                title="Your Cart is Empty"
+                text="Browse products and add them to your cart"
+                icon="sap-icon://cart"
+                visible="{= ${cart>/items}.length === 0 }">
+                <buttons>
+                    <Button
+                        text="Continue Shopping"
+                        type="Emphasized"
+                        press=".onContinueShopping"/>
+                </buttons>
+            </MessagePage>
+            <VBox 
+                visible="{= ${cart>/items}.length > 0 }"
+                class="sapUiContentPadding">
+                <List 
+                    items="{cart>/items}"
+                    backgroundDesign="Transparent">
+                    <items>
+                        <CustomListItem>
+                            <HBox justifyContent="SpaceBetween" width="100%">
+                                <VBox>
+                                    <Text text="{cart>ProductName}" />
+                                    <Text text="Price: {cart>UnitPrice} USD" />
+                                    <Text text="{
+                                        parts: ['cart>UnitPrice','cart>Quantity'],
+                                        formatter: '.formatItemTotal'
+                                    }"/>
+                                </VBox>
+                                <VBox alignItems="End">
+                                    <HBox alignItems="Center">
+                                        <Button text="-" press=".onDecreaseQty"/>
+                                        <Text text="{cart>Quantity}" width="30px" textAlign="Center"/>
+                                        <Button text="+" press=".onIncreaseQty"/>
+                                    </HBox>
+                                    <Button
+                                        text="Remove"
+                                        type="Reject"
+                                        press=".onRemoveItem"
+                                        class="sapUiTinyMarginTop"/>
+                                </VBox>
+                            </HBox>
+                        </CustomListItem>
+                    </items>
+                </List>
+            </VBox>
+        </content>
+        <footer>
+            <Toolbar height="4rem">
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                    alignItems="Center">
+                    <Text
+                        text="{
+                            parts: ['cart>/items'],
+                            formatter: '.formatTotal'
+                        }"
+                        class="sapUiTinyMarginBegin"/>
+                    <Button
+                        text="Buy Now"
+                        type="Emphasized"
+                        press=".onBuyNow"/>
+                    <Button
+                        text="Clear Cart"
+                        type="Reject"
+                        press=".onClearCart"
+                        class="sapUiTinyMarginEnd"/>
+                </HBox>
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>

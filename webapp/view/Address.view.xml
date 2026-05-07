@@ -1,0 +1,71 @@
+<mvc:View
+    controllerName="products.controller.Address"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+
+    <Page
+        title="Delivery Address"
+        showNavButton="true"
+        navButtonPress=".onNavBack">
+
+        <content>
+
+            <VBox class="sapUiContentPadding sapUiMediumMargin">
+
+                <Title text="Delivery Details" level="H2"/>
+
+                <!-- NAME -->
+                <Input
+                    id="nameInput"
+                    placeholder="Full Name"
+                    class="sapUiSmallMarginTop"/>
+
+                <!-- MOBILE -->
+                <Input
+                    id="mobileInput"
+                    placeholder="Phone Number"
+                    type="Tel"
+                    maxLength="10"
+                    class="sapUiSmallMarginTop"/>
+
+                <!-- EMAIL -->
+                <Input
+                    id="emailInput"
+                    placeholder="Email Address"
+                    type="Email"
+                    class="sapUiSmallMarginTop"/>
+
+                <!-- ADDRESS -->
+                <TextArea
+                    id="addressInput"
+                    placeholder="Full Address"
+                    rows="5"
+                    class="sapUiSmallMarginTop"/>
+
+                <!-- CITY -->
+                <Input
+                    id="cityInput"
+                    placeholder="City"
+                    class="sapUiSmallMarginTop"/>
+
+                <!-- PINCODE -->
+                <Input
+                    id="pincodeInput"
+                    placeholder="Pincode"
+                    type="Number"
+                    maxLength="6"
+                    class="sapUiSmallMarginTop"/>
+
+                <Button
+                    text="Continue to Payment"
+                    type="Emphasized"
+                    press=".onContinue"
+                    class="sapUiLargeMarginTop"/>
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

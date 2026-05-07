@@ -1,0 +1,51 @@
+<mvc:View
+    controllerName="products.controller.Detail"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form">
+    <Page title="Product Details" showNavButton="true" navButtonPress=".onNavBack">
+        <headerContent>
+            <Button
+                icon="sap-icon://cart"
+                text="Cart"
+                press=".onGoToCart"/>
+        </headerContent>
+        <VBox class="sapUiMediumMargin">
+            <Title text="{ProductName}" level="H2"/>
+            <form:SimpleForm
+                editable="false"
+                layout="ResponsiveGridLayout"
+                columnsXL="2"
+                columnsL="2"
+                columnsM="2">
+                <Label text="Product ID"/>
+                <Text text="{ProductID}"/>
+                <Label text="Price"/>
+                <Text text="{UnitPrice} USD"/>
+                <Label text="Stock"/>
+                <Text text="{UnitsInStock}"/>
+                <Label text="Quantity Per Unit"/>
+                <Text text="{QuantityPerUnit}"/>
+                <Label text="Category ID"/>
+                <Text text="{CategoryID}"/>
+                <Label text="Supplier ID"/>
+                <Text text="{SupplierID}"/>
+                <Label text="Discontinued"/>
+                <Text text="{Discontinued}"/>
+            </form:SimpleForm>
+            <VBox class="sapUiMediumMarginTop" alignItems="Start">
+            <HBox id="qtyBox" visible="false" gap="1rem" alignItems="Center">
+                <Button text="-" press=".onDecreaseQty"/>
+                <Text id="qtyText" text="1" width="40px" textAlign="Center"/>
+                <Button text="+" press=".onIncreaseQty"/>
+            </HBox>
+            <Button
+                id="cartBtn"
+                text="Add to Cart"
+                type="Emphasized"
+                class="sapUiMediumMarginTop"
+                press=".onCartAction"/>
+        </VBox>
+        </VBox>
+    </Page>
+</mvc:View>

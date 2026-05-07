@@ -1,0 +1,100 @@
+{
+  "_version": "1.84.0",
+  "sap.app": {
+    "id": "products",
+    "type": "application",
+    "title": "Products App",
+    "dataSources": {
+      "mainService": {
+        "uri": "/V2/Northwind/Northwind.svc/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0"
+        }
+      }
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {}
+      }
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "useBatch": false
+        }
+      },
+      "cart": {
+        "type": "sap.ui.model.json.JSONModel"
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "viewType": "XML",
+        "viewPath": "products.view",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "RouteMaster",
+          "target": "TargetMaster"
+        },
+        {
+          "pattern": "product/{id}",
+          "name": "RouteDetail",
+          "target": "TargetDetail"
+        },
+        {
+          "pattern": "cart",
+          "name": "RouteCart",
+          "target": "TargetCart"
+        },
+        {
+          "pattern": "address",
+          "name": "RouteAddress",
+          "target": "TargetAddress"
+        },
+        {
+          "pattern": "payment",
+          "name": "RoutePayment",
+          "target": "TargetPayment"
+        }
+      ],
+      "targets": {
+        "TargetMaster": {
+          "viewName": "Master",
+          "viewLevel": 1
+        },
+        "TargetDetail": {
+          "viewName": "Detail",
+          "viewLevel": 2
+        },
+        "TargetCart": {
+          "viewName": "Cart",
+          "viewLevel": 2
+        },
+        "TargetAddress": {
+          "viewName": "Address",
+          "viewLevel": 3
+        },
+        "TargetPayment": {
+          "viewName": "Payment",
+          "viewLevel": 4
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "products.view.App",
+      "type": "XML",
+      "id": "app"
+    }
+  }
+}

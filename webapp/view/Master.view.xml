@@ -1,0 +1,38 @@
+<mvc:View
+    controllerName="products.controller.Master"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+    <Page title="Products">
+        <headerContent>
+            <Button
+                icon="sap-icon://cart"
+                text="Cart"
+                press=".onGoToCart"/>
+        </headerContent>
+        <List id="productList" items="{/Products}">
+            <items>
+                <CustomListItem type="Active" press=".onItemPress">
+                    <HBox justifyContent="SpaceBetween" alignItems="Center" width="100%">
+                        <VBox>
+                            <Text text="{ProductName}" />
+                            <Text text="Price: {UnitPrice} USD" />
+                            <Text text="Stock: {UnitsInStock}" />
+                        </VBox>
+                       <Button
+                        text="{
+                            parts: [
+                                {path: 'ProductID'},
+                                {path: 'UnitsInStock'},
+                                {path: 'cart>/items'}   
+                            ],
+                            formatter: '.formatCartButtonText'
+                        }"
+                        type="Emphasized"
+                        enabled="{= ${UnitsInStock} > 0 }"
+                        press=".onAddToCart"/>
+                    </HBox>
+                </CustomListItem>
+            </items>
+        </List>
+    </Page>
+</mvc:View>

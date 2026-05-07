@@ -1,0 +1,57 @@
+<mvc:View
+    controllerName="products.controller.Payment"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc">
+
+    <Page
+        title="Payment"
+        showNavButton="true"
+        navButtonPress=".onNavBack">
+
+        <content>
+
+            <VBox class="sapUiContentPadding sapUiSmallMargin">
+
+                <Title text="Select Payment Method" level="H2" />
+
+                <RadioButtonGroup id="paymentGroup" class="sapUiMediumMarginTop">
+                    <buttons>
+                        <RadioButton text="Cash on Delivery" selected="true" />
+                        <RadioButton text="UPI" />
+                        <RadioButton text="Credit / Debit Card" />
+                    </buttons>
+                </RadioButtonGroup>
+
+                <Title
+                    text="Order Summary"
+                    level="H3"
+                    class="sapUiLargeMarginTop" />
+
+                <List items="{cart>/items}">
+                    <items>
+                        <StandardListItem
+                            title="{cart>ProductName}"
+                            description="Qty: {cart>Quantity}" />
+                    </items>
+                </List>
+
+                <Text
+                    text="{
+                        parts: ['cart>/items'],
+                        formatter: '.formatTotal'
+                    }"
+                    class="sapUiMediumMarginTop" />
+
+                <Button
+                    text="Place Order"
+                    type="Accept"
+                    press=".onPlaceOrder"
+                    class="sapUiLargeMarginTop" />
+
+            </VBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
