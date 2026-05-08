@@ -3,176 +3,122 @@
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns:core="sap.ui.core">
-
     <Page
         title="Cart"
         showNavButton="true"
-        navButtonPress=".onNavBack"
-        backgroundDesign="Solid"
-        enableScrolling="true">
-
-        <content>
-
-            <!-- EMPTY CART -->
-            <VBox
-                visible="{= ${cart>/items}.length === 0 }"
-                justifyContent="Center"
-                alignItems="Center"
-                height="70vh"
-                class="sapUiResponsiveContentPadding">
-
-                <core:Icon
-                    src="sap-icon://cart"
-                    size="5rem"
-                    color="#bcc5d1"/>
-
-                <Title
-                    text="Your Cart is Empty"
-                    level="H2"
-                    class="sapUiSmallMarginTop"/>
-
-                <Text
-                    text="Browse products and add them to your cart"
-                    class="sapUiSmallMarginTop sapUiSmallMarginBottom"/>
-
-                <Button
-                    text="Continue Shopping"
-                    type="Emphasized"
-                    press=".onContinueShopping"/>
-
-            </VBox>
-
-            <!-- CART ITEMS -->
-            <VBox
-                visible="{= ${cart>/items}.length > 0 }"
-                class="sapUiResponsiveContentPadding">
-
-                <List
-                    items="{cart>/items}"
-                    backgroundDesign="Transparent">
-
-                    <items>
-
-                        <CustomListItem>
-
-                            <HBox
-                                justifyContent="SpaceBetween"
-                                alignItems="Center"
-                                width="100%">
-
-                                <!-- LEFT -->
-                                <VBox>
-
-                                    <Title
-                                        text="{cart>ProductName}"
-                                        level="H3"/>
-
-                                    <Text
-                                        text="Price: {cart>UnitPrice} USD"/>
-
-                                    <Text
-                                        text="{
-                                            parts: ['cart>UnitPrice','cart>Quantity'],
-                                            formatter: '.formatItemTotal'
-                                        }"/>
-
-                                </VBox>
-
-                                <!-- RIGHT -->
-                                <VBox alignItems="End">
-
-                                    <HBox alignItems="Center">
-
-                                        <Button
-                                            text="-"
-                                            press=".onDecreaseQty"/>
-
-                                        <Text
-                                            text="{cart>Quantity}"
-                                            width="40px"
-                                            textAlign="Center"/>
-
-                                        <Button
-                                            text="+"
-                                            press=".onIncreaseQty"/>
-
-                                    </HBox>
-
-                                    <Button
-                                        text="Remove"
-                                        type="Reject"
-                                        press=".onRemoveItem"
-                                        class="sapUiTinyMarginTop"/>
-
-                                </VBox>
-
-                            </HBox>
-
-                        </CustomListItem>
-
-                    </items>
-
-                </List>
-
-                <!-- PRICE DETAILS -->
-                <VBox class="sapUiMediumMarginTop">
-
-                    <!-- SUBTOTAL -->
-                    <Text
-                        text="{
-                            parts: ['cart>/items'],
-                            formatter: '.formatSubtotalText'
-                        }"
-                        class="sapUiTinyMarginBottom"/>
-
-                    <!-- DISCOUNT -->
-                    <Text
-                        text="{
-                            parts: ['cart>/items'],
-                            formatter: '.formatDiscountText'
-                        }"
-                        class="sapUiTinyMarginBottom"/>
-
-                    <!-- FINAL TOTAL -->
-                    <Title
-                        level="H2"
-                        text="{
-                            parts: ['cart>/items'],
-                            formatter: '.formatFinalTotalText'
-                        }"
-                        class="sapUiTinyMarginBottom"/>
-
-                </VBox>
-
-                <!-- SPACE FOR FOOTER -->
-                <VBox height="5rem"/>
-
-            </VBox>
-
-        </content>
-
-        <!-- FOOTER -->
+        navButtonPress=".onNavBack">
         <footer>
-
-            <OverflowToolbar>
-
+            <Toolbar>
                 <ToolbarSpacer/>
-
                 <Button
                     text="Buy Now"
                     type="Emphasized"
-                    press=".onBuyNow"
-                    class="sapUiTinyMarginEnd"/>
-
+                    press=".onBuyNow"/>
                 <Button
                     text="Clear Cart"
                     type="Reject"
                     press=".onClearCart"/>
-
-            </OverflowToolbar>
-
+            </Toolbar>
         </footer>
-
+        <content>
+            <VBox
+                visible="{= ${cart>/items}.length === 0 }"
+                alignItems="Center"
+                justifyContent="Center"
+                width="100%"
+                class="sapUiLargeMarginTop">
+                <core:Icon
+                    src="sap-icon://cart"
+                    size="5rem"
+                    color="#b0b7c3"
+                    class="sapUiLargeMarginBottom"/>
+                <Title
+                    text="Your Cart is Empty"
+                    level="H1"
+                    class="sapUiSmallMarginBottom"/>
+                <Text
+                    text="Browse products and add them to your cart"
+                    class="sapUiSmallMarginBottom"/>
+                <Button
+                    text="Continue Shopping"
+                    type="Emphasized"
+                    press=".onContinueShopping"/>
+            </VBox>
+            <List
+                visible="{= ${cart>/items}.length > 0 }"
+                items="{cart>/items}">
+                <items>
+                    <CustomListItem>
+                        <HBox
+                            justifyContent="SpaceBetween"
+                            alignItems="Center"
+                            width="100%">
+                            <VBox>
+                                <Title
+                                    text="{cart>ProductName}"
+                                    level="H4"/>
+                                <Text
+                                    text="Price: {cart>UnitPrice} USD"/>
+                                <Text
+                                    text="Available Stock: {cart>UnitsInStock}"/>
+                                <Text
+                                    text="Quantity: {cart>Quantity}"/>
+                                <Text
+                                    text="Total: {
+                                        path: 'cart>',
+                                        formatter: '.formatItemTotal'
+                                    }"/>
+                            </VBox>
+                            <VBox alignItems="End">
+                                <HBox alignItems="Center">
+                                    <Button
+                                        text="-"
+                                        press=".onDecreaseQuantity"/>
+                                    <Text
+                                        text="{cart>Quantity}"
+                                        class="sapUiSmallMarginBegin sapUiSmallMarginEnd"/>
+                                    <Button
+                                        text="+"
+                                        press=".onIncreaseQuantity"
+                                        enabled="{
+                                            parts: [
+                                                'cart>Quantity',
+                                                'cart>UnitsInStock'
+                                            ],
+                                            formatter: '.isIncreaseEnabled'
+                                        }"/>
+                                </HBox>
+                                <Button
+                                    text="Remove"
+                                    type="Reject"
+                                    class="sapUiSmallMarginTop"
+                                    press=".onRemoveItem"/>
+                            </VBox>
+                        </HBox>
+                    </CustomListItem>
+                </items>
+            </List>
+            <VBox
+                visible="{= ${cart>/items}.length > 0 }"
+                class="sapUiLargeMargin">
+                <Title
+                    text="Order Summary"
+                    level="H2"
+                    class="sapUiMediumMarginBottom"/>
+                <Text
+                    text="Subtotal: {cart>/subtotal} USD"
+                    class="sapUiSmallMarginBottom"/>
+                <Text
+                    text="{cart>/discountText}"
+                    class="sapUiSmallMarginBottom"/>
+                <Text
+                    text="Discount Amount: {cart>/discount} USD"
+                    class="sapUiSmallMarginBottom"/>
+                <Title
+                    text="Final Total: {cart>/finalTotal} USD"
+                    level="H2"
+                    class="sapUiSmallMarginTop"/>
+            </VBox>
+        </content>
     </Page>
-
 </mvc:View>

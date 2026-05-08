@@ -1,200 +1,220 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageToast"
-], function (Controller, MessageToast) {
+    "sap/m/MessageToast",
+    "sap/m/MessageBox"
+], function (Controller, MessageToast, MessageBox) {
     "use strict";
-
     return Controller.extend("products.controller.Cart", {
-
+        onInit: function () {
+            var oRouter =
+                this.getOwnerComponent().getRouter();
+            oRouter.getRoute("RouteCart")
+                .attachPatternMatched(
+                    this._onRouteMatched,
+                    this
+                );
+        },
+        _onRouteMatched: function () {
+            this.updateCartSummary();
+        },
         onNavBack: function () {
             history.go(-1);
         },
-
         onContinueShopping: function () {
             this.getOwnerComponent()
                 .getRouter()
                 .navTo("RouteMaster");
         },
-
         onBuyNow: function () {
+            var oCartModel =
+                this.getOwnerComponent().getModel("cart");
+            var aItems =
+                oCartModel.getProperty("/items") || [];
+            if (aItems.length === 0) {
+                MessageToast.show("Cart is empty");
+                return;
+            }
             this.getOwnerComponent()
                 .getRouter()
                 .navTo("RouteAddress");
         },
-
-        // INCREASE QUANTITY
-        onIncreaseQty: function (oEvent) {
-
-            var oCartModel = this.getOwnerComponent().getModel("cart");
-
-            var oCtx = oEvent.getSource().getBindingContext("cart");
-
-            var sPath = oCtx.getPath();
-
-            var iQty = oCartModel.getProperty(sPath + "/Quantity");
-
-            oCartModel.setProperty(sPath + "/Quantity", iQty + 1);
-
+        onIncreaseQuantity: function (oEvent) {
+            var oContext =
+                oEvent.getSource()
+                    .getBindingContext("cart");
+            var sPath =
+                oContext.getPath();
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            var iQuantity =
+                oCartModel.getProperty(
+                    sPath + "/Quantity"
+                );
+            var iStock =
+                oCartModel.getProperty(
+                    sPath + "/UnitsInStock"
+                );
+            if (iQuantity >= iStock) {
+                MessageToast.show(
+                    "Only " +
+                    iStock +
+                    " items available in stock"
+                );
+                return;
+            }
+            oCartModel.setProperty(
+                sPath + "/Quantity",
+                iQuantity + 1
+            );
             oCartModel.refresh(true);
+            this.updateCartSummary();
         },
-
-        // DECREASE QUANTITY
-        onDecreaseQty: function (oEvent) {
-
-            var oCartModel = this.getOwnerComponent().getModel("cart");
-
-            var oCtx = oEvent.getSource().getBindingContext("cart");
-
-            var sPath = oCtx.getPath();
-
-            var iQty = oCartModel.getProperty(sPath + "/Quantity");
-
-            if (iQty > 1) {
-
-                oCartModel.setProperty(sPath + "/Quantity", iQty - 1);
-
+        onDecreaseQuantity: function (oEvent) {
+            var oContext =
+                oEvent.getSource()
+                    .getBindingContext("cart");
+            var sPath =
+                oContext.getPath();
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            var iQuantity =
+                oCartModel.getProperty(
+                    sPath + "/Quantity"
+                );
+            if (iQuantity > 1) {
+                oCartModel.setProperty(
+                    sPath + "/Quantity",
+                    iQuantity - 1
+                );
                 oCartModel.refresh(true);
+                this.updateCartSummary();
             }
         },
-
-        // REMOVE ITEM
         onRemoveItem: function (oEvent) {
-
-            var oCartModel = this.getOwnerComponent().getModel("cart");
-
-            var aItems = oCartModel.getProperty("/items");
-
-            var oCtx = oEvent.getSource().getBindingContext("cart");
-
-            var oItem = oCtx.getObject();
-
-            var aNewItems = aItems.filter(function (item) {
-                return item.ProductID !== oItem.ProductID;
-            });
-
-            oCartModel.setProperty("/items", aNewItems);
-
+            var oContext =
+                oEvent.getSource()
+                    .getBindingContext("cart");
+            var sPath =
+                oContext.getPath();
+            var iIndex =
+                parseInt(
+                    sPath.split("/")[2]
+                );
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            var aItems =
+                oCartModel.getProperty("/items");
+            aItems.splice(iIndex, 1);
+            oCartModel.setProperty(
+                "/items",
+                aItems
+            );
             oCartModel.refresh(true);
-
-            MessageToast.show("Item removed");
+            this.updateCartSummary();
+            MessageToast.show(
+                "Item removed"
+            );
         },
-
-        // CLEAR CART
         onClearCart: function () {
-
-            this.getOwnerComponent()
-                .getModel("cart")
-                .setProperty("/items", []);
-
-            this.getOwnerComponent()
-                .getModel("cart")
-                .refresh(true);
-
-            MessageToast.show("Cart cleared");
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            MessageBox.confirm(
+                "Clear entire cart?",
+                {
+                    onClose: function (sAction) {
+                        if (sAction === "OK") {
+                            oCartModel.setProperty(
+                                "/items",
+                                []
+                            );
+                            oCartModel.setProperty(
+                                "/subtotal",
+                                "0.00"
+                            );
+                            oCartModel.setProperty(
+                                "/discount",
+                                "0.00"
+                            );
+                            oCartModel.setProperty(
+                                "/finalTotal",
+                                "0.00"
+                            );
+                            oCartModel.refresh(true);
+                            MessageToast.show(
+                                "Cart cleared"
+                            );
+                        }
+                    }
+                }
+            );
         },
-
-        // ITEM TOTAL
-        formatItemTotal: function (price, qty) {
-
-            var total = price * qty;
-
-            return "Total: " + total.toFixed(2) + " USD";
-        },
-
-        // SUBTOTAL
-        formatSubtotalText: function (aItems) {
-
-            if (!aItems || aItems.length === 0) {
-                return "Subtotal: 0.00 USD";
-            }
-
-            var subtotal = 0;
-
-            aItems.forEach(function (item) {
-
-                subtotal +=
-                    parseFloat(item.UnitPrice) *
-                    parseInt(item.Quantity);
+        updateCartSummary: function () {
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            var aItems =
+                oCartModel.getProperty("/items") || [];
+            var fSubtotal = 0;
+            aItems.forEach(function (oItem) {
+                fSubtotal +=
+                    Number(oItem.UnitPrice) *
+                    Number(oItem.Quantity);
             });
-
-            return "Subtotal: " +
-                subtotal.toFixed(2) +
-                " USD";
+            var fDiscount = 0;
+            var sDiscountText = "No Discount Applied";
+            if (fSubtotal > 100) {
+                fDiscount =
+                    fSubtotal * 0.20;
+                sDiscountText =
+                    "20% Discount Applied";
+            }
+            else if (fSubtotal > 50) {
+                fDiscount =
+                    fSubtotal * 0.10;
+                sDiscountText =
+                    "10% Discount Applied";
+            }
+            var fFinalTotal =
+                fSubtotal - fDiscount;
+            oCartModel.setProperty(
+                "/subtotal",
+                fSubtotal.toFixed(2)
+            );
+            oCartModel.setProperty(
+                "/discount",
+                fDiscount.toFixed(2)
+            );
+            oCartModel.setProperty(
+                "/finalTotal",
+                fFinalTotal.toFixed(2)
+            );
+            oCartModel.setProperty(
+                "/discountText",
+                sDiscountText
+            );
+            oCartModel.refresh(true);
         },
-
-        // DISCOUNT
-        formatDiscountText: function (aItems) {
-
-            if (!aItems || aItems.length === 0) {
-                return "Discount: 0.00 USD";
-            }
-
-            var subtotal = 0;
-
-            aItems.forEach(function (item) {
-
-                subtotal +=
-                    parseFloat(item.UnitPrice) *
-                    parseInt(item.Quantity);
-            });
-
-            var discount = 0;
-            var percentage = 0;
-
-            if (subtotal > 100) {
-
-                percentage = 20;
-                discount = subtotal * 0.20;
-
-            } else if (subtotal > 50) {
-
-                percentage = 10;
-                discount = subtotal * 0.10;
-            }
-
-            if (discount === 0) {
-                return "Discount: 0.00 USD";
-            }
-
-            return percentage +
-                "% Discount Applied: - " +
-                discount.toFixed(2) +
-                " USD";
+        isIncreaseEnabled: function (
+            iQuantity,
+            iStock
+        ) {
+            return iQuantity < iStock;
         },
-
-        // FINAL TOTAL
-        formatFinalTotalText: function (aItems) {
-
-            if (!aItems || aItems.length === 0) {
-                return "Final Total: 0.00 USD";
+        formatItemTotal: function (oItem) {
+            if (!oItem) {
+                return "0.00 USD";
             }
-
-            var subtotal = 0;
-
-            aItems.forEach(function (item) {
-
-                subtotal +=
-                    parseFloat(item.UnitPrice) *
-                    parseInt(item.Quantity);
-            });
-
-            var finalTotal = subtotal;
-
-            if (subtotal > 100) {
-
-                finalTotal =
-                    subtotal - (subtotal * 0.20);
-
-            } else if (subtotal > 50) {
-
-                finalTotal =
-                    subtotal - (subtotal * 0.10);
-            }
-
-            return "Final Total: " +
-                finalTotal.toFixed(2) +
-                " USD";
+            var fTotal =
+                Number(oItem.UnitPrice) *
+                Number(oItem.Quantity);
+            return (
+                fTotal.toFixed(2) +
+                " USD"
+            );
         }
-
     });
 });

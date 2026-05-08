@@ -2,91 +2,57 @@
     controllerName="products.controller.Payment"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc">
-
     <Page
         title="Payment"
         showNavButton="true"
         navButtonPress=".onNavBack">
-
         <content>
-
             <VBox class="sapUiMediumMargin">
-
-                <!-- PAYMENT METHODS -->
                 <Title
                     text="Select Payment Method"
                     level="H3"
                     class="sapUiSmallMarginBottom"/>
-
                 <RadioButtonGroup columns="1">
-
                     <buttons>
-
                         <RadioButton text="Cash on Delivery" selected="true"/>
-
                         <RadioButton text="UPI"/>
-
                         <RadioButton text="Credit / Debit Card"/>
-
                     </buttons>
-
                 </RadioButtonGroup>
-
-                <!-- ORDER SUMMARY -->
                 <Title
                     text="Order Summary"
                     level="H3"
                     class="sapUiLargeMarginTop sapUiSmallMarginBottom"/>
-
                 <List
                     items="{cart>/items}">
-
                     <CustomListItem>
-
                         <VBox class="sapUiSmallMargin">
-
                             <Title
                                 text="{cart>ProductName}"
                                 level="H4"/>
-
                             <Text
                                 text="Qty: {cart>Quantity}"
                                 class="sapUiTinyMarginTop"/>
-
                         </VBox>
-
                     </CustomListItem>
-
                 </List>
-
-                <!-- TOTALS -->
                 <VBox class="sapUiMediumMarginTop">
-
                     <Text
                         text="{path: 'cart>/items', formatter: '.formatSubtotal'}"
                         class="sapUiSmallMarginBottom"/>
-
                     <Text
                         text="{path: 'cart>/items', formatter: '.formatDiscount'}"
                         class="sapUiSmallMarginBottom"/>
-
                     <Title
                         text="{path: 'cart>/items', formatter: '.formatFinalTotal'}"
                         level="H3"/>
-
                 </VBox>
-
-                <!-- BUTTON -->
                 <Button
                     text="Place Order"
                     type="Accept"
                     press=".onPlaceOrder"
                     class="sapUiLargeMarginTop"/>
-
             </VBox>
-
         </content>
-
     </Page>
-
 </mvc:View>

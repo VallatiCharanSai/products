@@ -2,71 +2,46 @@
     controllerName="products.controller.Master"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc">
-
     <Page title="Products">
-
-        <!-- HEADER -->
         <headerContent>
-
             <Button
                 icon="sap-icon://cart"
                 text="Cart"
                 press=".onGoToCart"/>
-
         </headerContent>
-
         <content>
-
-            <!-- SEARCH + FILTER -->
             <Toolbar>
-
                 <SearchField
                     id="searchField"
                     width="100%"
                     liveChange=".onSearch"
                     placeholder="Search products"/>
-
                 <ToolbarSpacer/>
-
                 <Button
                     icon="sap-icon://filter"
                     text="Filter"
                     press=".onOpenFilterDialog"/>
-
             </Toolbar>
-
-            <!-- PRODUCT LIST -->
             <List
                 id="productList"
                 items="{/Products}">
-
                 <items>
-
                     <CustomListItem
                         type="Active"
                         press=".onItemPress">
-
                         <HBox
                             justifyContent="SpaceBetween"
                             alignItems="Center"
                             width="100%">
-
-                            <!-- LEFT -->
                             <VBox>
-
                                 <Title
                                     text="{ProductName}"
                                     level="H4"/>
-
                                 <Text
                                     text="Price: {UnitPrice} USD"/>
-
                                 <Text
                                     text="Stock: {UnitsInStock}"/>
-
                             </VBox>
-
-                            <!-- RIGHT -->
                             <Button
                                 text="{
                                     parts: [
@@ -79,17 +54,10 @@
                                 type="Emphasized"
                                 enabled="{= ${UnitsInStock} > 0 }"
                                 press=".onAddToCart"/>
-
                         </HBox>
-
                     </CustomListItem>
-
                 </items>
-
             </List>
-
         </content>
-
     </Page>
-
 </mvc:View>
