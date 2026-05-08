@@ -3,41 +3,42 @@ sap.ui.define([
     "sap/m/MessageBox"
 ], function (Controller, MessageBox) {
     "use strict";
-
     return Controller.extend("products.controller.Payment", {
-
         onNavBack: function () {
             history.go(-1);
         },
-
         formatTotal: function (aItems) {
-
             if (!aItems || aItems.length === 0) {
-                return "Total: 0.00 USD";
+                return "0.00 USD";
             }
-
             var total = 0;
-
             aItems.forEach(function (item) {
                 total += item.UnitPrice * item.Quantity;
             });
-
             return "Total: " + total.toFixed(2) + " USD";
         },
-
         onPlaceOrder: function () {
+            var oCartModel = this.getOwnerComponent().getModel("cart");
+            MessageBox.success(
+                "Order Placed Successfully!",
+                {
+                    title: "Success",
+                    onClose: function () {
 
-            MessageBox.success("Order Placed Successfully!", {
-                onClose: function () {
-                    window.location.hash = "#/";
+                        // CLEAR CART
+                        oCartModel.setProperty("/items", []);
+
+                        // REFRESH MODEL
+                        oCartModel.refresh(true);
+
+                        // NAVIGATE TO CART PAGE
+                        this.getOwnerComponent()
+                            .getRouter()
+                            .navTo("RouteCart");
+
+                    }.bind(this)
                 }
-            });
-
-            var oCartModel =
-                this.getOwnerComponent().getModel("cart");
-
-            oCartModel.setProperty("/items", []);
-            oCartModel.refresh(true);
+            );
         }
 
     });
