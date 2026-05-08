@@ -14,16 +14,24 @@ sap.ui.define([
 
             UIComponent.prototype.init.apply(this, arguments);
 
-            // Cart Model
+            // CART MODEL
             var oCartModel = new JSONModel({
                 items: []
             });
 
             this.setModel(oCartModel, "cart");
 
-            // Checkout Model
+            // CHECKOUT MODEL
             var oCheckoutModel = new JSONModel({
-                address: {}
+
+                name: "",
+                phone: "",
+                email: "",
+                address: "",
+                city: "",
+                state: "",
+                pincode: ""
+
             });
 
             this.setModel(oCheckoutModel, "checkout");

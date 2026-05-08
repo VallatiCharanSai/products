@@ -17,6 +17,7 @@ sap.ui.define([
             var sEmail = this.byId("emailInput").getValue().trim();
             var sAddress = this.byId("addressInput").getValue().trim();
             var sCity = this.byId("cityInput").getValue().trim();
+            var sState = this.byId("stateInput").getValue().trim();
             var sPincode = this.byId("pincodeInput").getValue().trim();
 
             // NAME VALIDATION
@@ -33,7 +34,7 @@ sap.ui.define([
                 return;
             }
 
-           // EMAIL VALIDATION
+            // EMAIL VALIDATION
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!emailRegex.test(sEmail)) {
@@ -53,6 +54,12 @@ sap.ui.define([
                 return;
             }
 
+            // STATE VALIDATION
+            if (!sState) {
+                MessageBox.error("Please enter state");
+                return;
+            }
+
             // PINCODE VALIDATION
             var pinRegex = /^[0-9]{6}$/;
 
@@ -62,16 +69,16 @@ sap.ui.define([
             }
 
             // SAVE DATA
-            var oCheckoutModel = this.getOwnerComponent().getModel("checkout");
+            var oCheckoutModel =
+                this.getOwnerComponent().getModel("checkout");
 
-            oCheckoutModel.setProperty("/address", {
-                name: sName,
-                mobile: sMobile,
-                email: sEmail,
-                address: sAddress,
-                city: sCity,
-                pincode: sPincode
-            });
+            oCheckoutModel.setProperty("/name", sName);
+            oCheckoutModel.setProperty("/phone", sMobile);
+            oCheckoutModel.setProperty("/email", sEmail);
+            oCheckoutModel.setProperty("/address", sAddress);
+            oCheckoutModel.setProperty("/city", sCity);
+            oCheckoutModel.setProperty("/state", sState);
+            oCheckoutModel.setProperty("/pincode", sPincode);
 
             // NAVIGATE
             this.getOwnerComponent()
