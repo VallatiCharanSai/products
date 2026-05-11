@@ -1,86 +1,71 @@
 <mvc:View
     controllerName="products.controller.Address"
     xmlns="sap.m"
-    xmlns:mvc="sap.ui.core.mvc">
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:l="sap.ui.layout">
     <Page
         title="Delivery Address"
         showNavButton="true"
         navButtonPress=".onNavBack">
         <content>
-            <VBox class="sapUiMediumMargin" width="100%">
+            <VBox class="sapUiMediumMargin">
                 <Label text="Full Name"/>
                 <Input
-                    id="nameInput"
-                    value="{checkout>/name}"
-                    width="100%"
-                    placeholder="Enter full name"/>
+                    id="fullName"
+                    placeholder="Enter full name"
+                    width="100%"/>
                 <Label
                     text="Phone Number"
                     class="sapUiSmallMarginTop"/>
                 <Input
-                    id="mobileInput"
-                    value="{checkout>/phone}"
-                    width="100%"
+                    id="phone"
                     type="Tel"
-                    placeholder="Enter phone number"/>
+                    placeholder="Enter phone number"
+                    width="100%"/>
                 <Label
                     text="Email"
                     class="sapUiSmallMarginTop"/>
                 <Input
-                    id="emailInput"
-                    value="{checkout>/email}"
-                    width="100%"
+                    id="email"
                     type="Email"
-                    placeholder="Enter email"/>
+                    placeholder="Enter email"
+                    width="100%"/>
                 <Label
                     text="Delivery Address"
                     class="sapUiSmallMarginTop"/>
                 <TextArea
-                    id="addressInput"
-                    value="{checkout>/address}"
-                    width="100%"
+                    id="address"
                     rows="4"
-                    placeholder="Enter full delivery address"/>
-                <HBox
-                    class="sapUiSmallMarginTop"
-                    wrap="Wrap"
+                    placeholder="Enter delivery address"
+                    width="100%"/>
+                <l:Grid
+                    defaultSpan="XL4 L4 M4 S12"
                     width="100%"
-                    justifyContent="SpaceBetween">
-                    <VBox
-                        width="32%"
-                        class="sapUiTinyMarginBottom">
+                    class="sapUiMediumMarginTop">
+                    <VBox class="sapUiSmallMarginEnd">
                         <Label text="City"/>
                         <Input
-                            id="cityInput"
-                            value="{checkout>/city}"
+                            id="city"
                             width="100%"/>
                     </VBox>
-                    <VBox
-                        width="32%"
-                        class="sapUiTinyMarginBottom">
+                    <VBox class="sapUiSmallMarginEnd">
                         <Label text="State"/>
                         <Input
-                            id="stateInput"
-                            value="{checkout>/state}"
+                            id="state"
                             width="100%"/>
                     </VBox>
-                    <VBox
-                        width="32%"
-                        class="sapUiTinyMarginBottom">
+                    <VBox>
                         <Label text="Pincode"/>
                         <Input
-                            id="pincodeInput"
-                            value="{checkout>/pincode}"
-                            width="100%"
-                            type="Number"/>
+                            id="pincode"
+                            width="100%"/>
                     </VBox>
-                </HBox>
+                </l:Grid>
                 <Button
                     text="Continue to Payment"
                     type="Emphasized"
-                    press=".onContinue"
-                    class="sapUiMediumMarginTop"
-                    width="100%"/>
+                    class="sapUiLargeMarginTop"
+                    press=".onContinue"/>
             </VBox>
         </content>
     </Page>

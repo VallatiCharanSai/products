@@ -18,7 +18,7 @@ sap.ui.define([
             this.updateCartSummary();
         },
         onNavBack: function () {
-            history.go(-1);
+            this.getOwnerComponent().getRouter().navTo("RouteMaster");
         },
         onContinueShopping: function () {
             this.getOwnerComponent()
@@ -27,7 +27,8 @@ sap.ui.define([
         },
         onBuyNow: function () {
             var oCartModel =
-                this.getOwnerComponent().getModel("cart");
+                this.getOwnerComponent()
+                    .getModel("cart");
             var aItems =
                 oCartModel.getProperty("/items") || [];
             if (aItems.length === 0) {
@@ -67,8 +68,7 @@ sap.ui.define([
                 sPath + "/Quantity",
                 iQuantity + 1
             );
-            oCartModel.refresh(true);
-            this.updateCartSummary();
+            this._updateCartStorage();
         },
         onDecreaseQuantity: function (oEvent) {
             var oContext =
@@ -88,8 +88,7 @@ sap.ui.define([
                     sPath + "/Quantity",
                     iQuantity - 1
                 );
-                oCartModel.refresh(true);
-                this.updateCartSummary();
+                this._updateCartStorage();
             }
         },
         onRemoveItem: function (oEvent) {
@@ -112,8 +111,7 @@ sap.ui.define([
                 "/items",
                 aItems
             );
-            oCartModel.refresh(true);
-            this.updateCartSummary();
+            this._updateCartStorage();
             MessageToast.show(
                 "Item removed"
             );
@@ -143,6 +141,11 @@ sap.ui.define([
                                 "/finalTotal",
                                 "0.00"
                             );
+                            oCartModel.setProperty(
+                                "/discountText",
+                                "No Discount"
+                            );
+                            localStorage.removeItem("cartItems");
                             oCartModel.refresh(true);
                             MessageToast.show(
                                 "Cart cleared"
@@ -198,6 +201,18 @@ sap.ui.define([
             );
             oCartModel.refresh(true);
         },
+        _updateCartStorage: function () {
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            var aItems =
+                oCartModel.getProperty("/items") || [];
+            localStorage.setItem(
+                "cartItems",
+                JSON.stringify(aItems)
+            );
+            this.updateCartSummary();
+        },
         isIncreaseEnabled: function (
             iQuantity,
             iStock
@@ -206,15 +221,14 @@ sap.ui.define([
         },
         formatItemTotal: function (oItem) {
             if (!oItem) {
-                return "0.00 USD";
+                return "Total: 0.00 USD";
             }
             var fTotal =
                 Number(oItem.UnitPrice) *
                 Number(oItem.Quantity);
-            return (
+            return "Total: " +
                 fTotal.toFixed(2) +
-                " USD"
-            );
+                " USD";
         }
     });
 });

@@ -1,60 +1,81 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "sap/m/MessageBox"
-], function (Controller, MessageBox) {
+    "sap/m/MessageToast"
+], function (Controller, MessageToast) {
     "use strict";
     return Controller.extend("products.controller.Address", {
         onNavBack: function () {
-            history.go(-1);
+            this.getOwnerComponent()
+                .getRouter()
+                .navTo("RouteCart");
         },
         onContinue: function () {
-            var sName = this.byId("nameInput").getValue().trim();
-            var sMobile = this.byId("mobileInput").getValue().trim();
-            var sEmail = this.byId("emailInput").getValue().trim();
-            var sAddress = this.byId("addressInput").getValue().trim();
-            var sCity = this.byId("cityInput").getValue().trim();
-            var sState = this.byId("stateInput").getValue().trim();
-            var sPincode = this.byId("pincodeInput").getValue().trim();
-            if (!sName) {
-                MessageBox.error("Please enter name");
+            var oCartModel =
+                this.getOwnerComponent()
+                    .getModel("cart");
+            if (!oCartModel) {
+                MessageToast.show(
+                    "Cart model missing"
+                );
                 return;
             }
-            var mobileRegex = /^[0-9]{10}$/;
-            if (!mobileRegex.test(sMobile)) {
-                MessageBox.error("Enter valid 10 digit phone number");
+            var sFullName =
+                this.byId("fullName").getValue();
+            var sPhone =
+                this.byId("phone").getValue();
+            var sEmail =
+                this.byId("email").getValue();
+            var sAddress =
+                this.byId("address").getValue();
+            var sCity =
+                this.byId("city").getValue();
+            var sState =
+                this.byId("state").getValue();
+            var sPincode =
+                this.byId("pincode").getValue();
+            if (!sFullName ||
+                !sPhone ||
+                !sEmail ||
+                !sAddress ||
+                !sCity ||
+                !sState ||
+                !sPincode) {
+                MessageToast.show(
+                    "Please fill all fields"
+                );
                 return;
             }
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(sEmail)) {
-                MessageBox.error("Enter valid email");
+            var oPhoneRegex = /^[0-9]{10}$/;
+            if (!oPhoneRegex.test(sPhone)) {
+                MessageToast.show(
+                    "Enter valid 10 digit phone number"
+                );
                 return;
             }
-            if (!sAddress) {
-                MessageBox.error("Please enter address");
+            var oEmailRegex =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!oEmailRegex.test(sEmail)) {
+                MessageToast.show(
+                    "Enter valid email"
+                );
                 return;
             }
-            if (!sCity) {
-                MessageBox.error("Please enter city");
+            var oPinRegex = /^[0-9]{6}$/;
+            if (!oPinRegex.test(sPincode)) {
+                MessageToast.show(
+                    "Enter valid 6 digit pincode"
+                );
                 return;
             }
-            if (!sState) {
-                MessageBox.error("Please enter state");
-                return;
-            }
-            var pinRegex = /^[0-9]{6}$/;
-            if (!pinRegex.test(sPincode)) {
-                MessageBox.error("Enter valid 6 digit pincode");
-                return;
-            }
-            var oCheckoutModel =
-                this.getOwnerComponent().getModel("checkout");
-            oCheckoutModel.setProperty("/name", sName);
-            oCheckoutModel.setProperty("/phone", sMobile);
-            oCheckoutModel.setProperty("/email", sEmail);
-            oCheckoutModel.setProperty("/address", sAddress);
-            oCheckoutModel.setProperty("/city", sCity);
-            oCheckoutModel.setProperty("/state", sState);
-            oCheckoutModel.setProperty("/pincode", sPincode);
+            oCartModel.setProperty("/address", {
+                fullName: sFullName,
+                phone: sPhone,
+                email: sEmail,
+                address: sAddress,
+                city: sCity,
+                state: sState,
+                pincode: sPincode
+            });
             this.getOwnerComponent()
                 .getRouter()
                 .navTo("RoutePayment");

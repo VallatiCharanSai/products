@@ -210,6 +210,7 @@ sap.ui.define([
                 Quantity: 1
             });
             oCartModel.setProperty("/items", aItems);
+            localStorage.setItem("cartItems", JSON.stringify(aItems));
             oCartModel.refresh(true);
         }
     });

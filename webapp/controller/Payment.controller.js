@@ -68,16 +68,32 @@ sap.ui.define([
                 {
                     actions: ["OK"],
                     onClose: function () {
-                        this.getOwnerComponent()
-                            .getModel("cart")
-                            .setProperty("/items", []);
-                        this.getOwnerComponent()
-                            .getModel("cart")
-                            .refresh(true);
+                        var oCartModel =
+                            this.getOwnerComponent()
+                                .getModel("cart");
+                        oCartModel.setProperty("/items", []);
+                        oCartModel.setProperty(
+                            "/subtotal",
+                            "0.00"
+                        );
+                        oCartModel.setProperty(
+                            "/discount",
+                            "0.00"
+                        );
+                        oCartModel.setProperty(
+                            "/finalTotal",
+                            "0.00"
+                        );
+                        oCartModel.setProperty(
+                            "/discountText",
+                            "No Discount"
+                        );
+                        oCartModel.refresh(true);
+                        localStorage.removeItem("cartItems");
                         MessageToast.show("Cart cleared");
                         this.getOwnerComponent()
                             .getRouter()
-                            .navTo("RouteCart");
+                            .navTo("RouteMaster");
                     }.bind(this)
                 }
             );

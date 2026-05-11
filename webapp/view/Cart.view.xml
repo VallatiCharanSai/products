@@ -64,7 +64,7 @@
                                 <Text
                                     text="Quantity: {cart>Quantity}"/>
                                 <Text
-                                    text="Total: {
+                                    text="{
                                         path: 'cart>',
                                         formatter: '.formatItemTotal'
                                     }"/>
